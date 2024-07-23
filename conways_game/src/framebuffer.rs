@@ -6,10 +6,11 @@ pub struct Framebuffer {
     current_color: u32,
 }
 
+
 impl Framebuffer {
     pub fn new(width: usize, height: usize) -> Framebuffer {
         let background_color = 0x000000; // Negro por defecto
-        let current_color = 0xFFFFFF; // Blanco por defecto
+        let current_color = 0x008892c6; 
         let buffer = vec![background_color; width * height];
         Framebuffer {
             width,

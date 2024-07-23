@@ -1,5 +1,4 @@
 use minifb::{Key, Window, WindowOptions};
-use image::{ImageBuffer, Rgba};
 mod framebuffer;
 use framebuffer::Framebuffer;
 
@@ -130,18 +129,43 @@ fn initialize_beacon(framebuffer: &mut Framebuffer, x: usize, y: usize) {
     }
 }
 
+fn initialize_circle(framebuffer: &mut Framebuffer, center_x: usize, center_y: usize, radius: usize) {
+    let num_points = 10;  
+
+    for i in 0..num_points {
+        let angle = 2.0 * std::f64::consts::PI * (i as f64) / (num_points as f64);
+        let x = (center_x as f64 + radius as f64 * angle.cos()).round() as usize;
+        let y = (center_y as f64 + radius as f64 * angle.sin()).round() as usize;
+
+        match i % 10 {
+            0 => initialize_glider(framebuffer, x, y),
+            1 => initialize_beehive(framebuffer, x, y),
+            2 => initialize_blinker(framebuffer, x, y),
+            3 => initialize_toad(framebuffer, x, y),
+            4 => initialize_pulsar(framebuffer, x, y),
+            5 => initialize_lwss(framebuffer, x, y),
+            6 => initialize_boat(framebuffer, x, y),
+            7 => initialize_beacon(framebuffer, x, y),
+            8 => initialize_mwss(framebuffer, x, y),
+            9 => initialize_hwss(framebuffer, x, y),
+            _ => {}
+        }
+    }
+}
+
 fn main() {
     let mut framebuffer = Framebuffer::new(80, 60);
-    initialize_glider(&mut framebuffer, 10, 10);
-    initialize_beehive(&mut framebuffer, 20, 10);
-    initialize_blinker(&mut framebuffer, 30, 10);
-    initialize_toad(&mut framebuffer, 40, 10);
-    initialize_pulsar(&mut framebuffer, 50, 10);
-    initialize_lwss(&mut framebuffer, 60, 10);
-    initialize_boat(&mut framebuffer, 70, 10);
-    initialize_beacon(&mut framebuffer, 10, 20);
-    initialize_mwss(&mut framebuffer, 20, 20);
-    initialize_hwss(&mut framebuffer, 30, 20);
+    let radius = 12; 
+
+    let center_x_left = framebuffer.width / 4;   
+    let center_x_right = 3 * framebuffer.width / 4;  
+    let center_y_top = framebuffer.height / 4;   
+    let center_y_bottom = 3 * framebuffer.height / 4;  
+
+    initialize_circle(&mut framebuffer, center_x_left, center_y_top, radius);
+    initialize_circle(&mut framebuffer, center_x_right, center_y_top, radius);
+    initialize_circle(&mut framebuffer, center_x_left, center_y_bottom, radius);
+    initialize_circle(&mut framebuffer, center_x_right, center_y_bottom, radius);
 
     let mut window = Window::new("Game of Life - Conway", 800, 600, WindowOptions::default()).unwrap();
     while window.is_open() && !window.is_key_down(Key::Escape) {
