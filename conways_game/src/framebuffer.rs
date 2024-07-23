@@ -47,6 +47,48 @@ impl Framebuffer {
     pub fn set_current_color(&mut self, color: u32) {
         self.current_color = color;
     }
+
+    fn is_alive(&self, x: usize, y: usize) -> bool {
+        self.get_color_at(x, y).unwrap_or(0) == self.current_color
+    }
+
+    fn live_neighbor_count(&self, x: usize, y: usize) -> usize {
+        let mut count = 0;
+        for i in -1..=1 {
+            for j in -1..=1 {
+                if !(i == 0 && j == 0) {
+                    let nx = x as i32 + i;
+                    let ny = y as i32 + j;
+                    if nx >= 0 && nx < self.width as i32 && ny >= 0 && ny < self.height as i32 {
+                        if self.is_alive(nx as usize, ny as usize) {
+                            count += 1;
+                        }
+                    }
+                }
+            }
+        }
+        count
+    }
+
+    // Modifica esta función para usar &mut self y acceder a los métodos con self.
+    pub fn update_game_of_life(&mut self) {
+        let mut new_buffer = self.buffer.clone();
+        for y in 0..self.height {
+            for x in 0..self.width {
+                let alive = self.is_alive(x, y);
+                let count = self.live_neighbor_count(x, y);
+
+                let index = y * self.width + x;
+                new_buffer[index] = match (alive, count) {
+                    (true, 2) | (true, 3) => self.current_color, // Sobrevive
+                    (false, 3) => self.current_color,           // Nace
+                    _ => self.background_color,                 // Muere
+                };
+            }
+        }
+        self.buffer = new_buffer;
+    }
+
 }
 
 #[cfg(test)]
