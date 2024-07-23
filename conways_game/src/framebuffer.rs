@@ -70,7 +70,6 @@ impl Framebuffer {
         count
     }
 
-    // Modifica esta función para usar &mut self y acceder a los métodos con self.
     pub fn update_game_of_life(&mut self) {
         let mut new_buffer = self.buffer.clone();
         for y in 0..self.height {
