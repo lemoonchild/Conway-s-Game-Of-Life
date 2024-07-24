@@ -26,4 +26,4 @@ Al iniciar el programa, verás la ventana del "Game of Life" con los patrones qu
 
 ### Gif del programa 
 
-![Conway’s Game Of Life]([https://postimg.cc/q6XBXtKz]))
+![Demostración de Game of Life](https://i.postimg.cc/XYZabc123/your-gif.gif)
